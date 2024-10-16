@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 )
 
@@ -245,6 +246,14 @@ func (c *Client) CreateRun(
 		withBetaAssistantVersion(c.config.AssistantVersion))
 	if err != nil {
 		return
+	}
+
+	// Dump the request
+	dump, err := httputil.DumpRequest(req, true)
+	if err != nil {
+		fmt.Println("Error dumping request:", err)
+	} else {
+		fmt.Println("Request dump:\n", string(dump))
 	}
 
 	err = c.sendRequest(req, &response)
